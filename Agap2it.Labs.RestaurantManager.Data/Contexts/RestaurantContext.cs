@@ -1,4 +1,5 @@
-﻿using Agap2it.Labs.RestaurantManager.Data.Entities;
+﻿using Agap2it.Labs.RestaurantManager.Data.Base;
+using Agap2it.Labs.RestaurantManager.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,22 @@ namespace Agap2it.Labs.RestaurantManager.Data.Contexts
             }
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            var types = new List<Type>() {typeof(Country), typeof(Dish), typeof(DishType), typeof(Meal), typeof(MealDish), typeof(MealType),
+                                             typeof(Menu), typeof(Profile), typeof(Region), typeof(Restaurant)};
 
+            foreach(var type in types)
+            {
+                modelBuilder.Entity(type).HasIndex("Uuid").IsUnique(true);
+                modelBuilder.Entity(type).Property("Uuid").HasDefaultValueSql("newid()");
+            }
+
+
+
+            
+        }
         #endregion
     }
 }
